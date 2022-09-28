@@ -1,5 +1,6 @@
 ﻿using ORM_LINQ.Models.DB;
 using ORM_LINQ.Models;
+using System.Linq.Expressions;
 
 namespace ORM_LINQ;
 
@@ -28,14 +29,21 @@ public class Program
             //      zu Datenbank übertragen
             context.Customers.Add(new Customer()
             {
-                Firstname="Tobias", Lastname="Laser", Birthdate=new DateTime(2003,1,30), Department = 'W', 
-                Gender = Gender.male, IsMarried = false, Salary=2090.8m
+                Gender = Gender.male,
+                IsMarried = false,
+                Salary = 2090.8m
             });
+            try
+            {
+                //  Wichtig: erst durch den Aufruf von SavChangesAsync() werden die Daten zur 
+                //      DB übertragen
+                await context.SaveChangesAsync();
 
-            //  Wichtig: erst durch den Aufruf von SavChangesAsync() werden die Daten zur 
-            //      DB übertragen
-            await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Fehler:\t" + ex.Message);
+            }
         }
-
     }
 }
