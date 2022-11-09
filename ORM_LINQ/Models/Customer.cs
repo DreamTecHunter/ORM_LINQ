@@ -38,8 +38,9 @@ namespace ORM_LINQ.Models
         public bool IsMarried { get; set; } // isMale im Unterricht
         public Gender Gender { get; set; }
         public virtual Address Address { get; set; }
+        public virtual Bill bill { get; set; }
 
-        public Customer(string firstname, string lastname, DateTime birthdate, char department, decimal salary, bool isMarried, Gender gender, Address adress)
+        public Customer(string firstname, string lastname, DateTime birthdate, char department, decimal salary, bool isMarried, Gender gender, Address address)
         {
             this.Firstname = firstname;
             this.Lastname = lastname;
@@ -48,8 +49,7 @@ namespace ORM_LINQ.Models
             this.Salary = salary;
             this.IsMarried = isMarried;
             this.Gender = Gender;
-            this.Address = adress;
-
+            this.Address = address;
         }
 
         public Customer() : this("","",DateTime.MinValue, '#', 0.0m, false, Gender.undefined, new Address())
@@ -59,7 +59,7 @@ namespace ORM_LINQ.Models
 
         public override string ToString()
         {
-            return this.ToString();
+            return base.ToString()+this.Firstname;
         }
         // ctor's + ToString()
 

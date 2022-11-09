@@ -13,9 +13,11 @@ namespace ORM_LINQ.Models
         public virtual List<Customer> Customer { get; set; }
         public virtual List<Article> Article { get; set; }
 
-        public Bill(decimal prize)
+        public Bill(decimal prize, Customer customer, Article article)
         {
-            Prize = prize;
+            this.Prize = prize;
+            this.Customer = customer;
+            this.Article = article;
         }
 
         public Bill() : this(0.0m)
@@ -25,7 +27,7 @@ namespace ORM_LINQ.Models
 
         public override string ToString()
         {
-            return this.ToString();
+            return base.ToString();
         }
     }
 }

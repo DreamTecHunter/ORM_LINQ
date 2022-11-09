@@ -1,8 +1,6 @@
-﻿using ORM_LINQ.Models.DB;
+﻿using Microsoft.EntityFrameworkCore;
 using ORM_LINQ.Models;
-using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.EntityFrameworkCore;
+using ORM_LINQ.Models.DB;
 
 namespace ORM_LINQ;
 
@@ -29,54 +27,76 @@ public class Program
 
             //  Achtung: der neue Customer ist nur im RAM vorhanden - er wurde noch nicht 
             //      zu Datenbank übertragen
-            var entity = context.Customers.Where(context => context.Firstname == "Tobias" && context.Lastname == "Laser").ToList();
+            var entity = context.Customers.Where(c => c.Firstname == "Tobias" && c.Lastname == "Laser").ToList<Customer>();
             if (entity.Count == 0)
             {
-                context.Customers.Add(new Customer()
+                var cTelfs = context.Cities.Where(c => c.Postalcode.Equals("06410")).ToList<City>();
+                City telfs;
+                if (cTelfs.Count == 0)
                 {
-                    Firstname = "Tobias",
-                    Lastname = "Laser",
-                    Birthdate = new DateTime(2003, 01, 30),
-                    Department = 'W',
-                    Gender = Gender.male,
-                    IsMarried = false,
-                    Salary = 2090.8m,
-                    Address = new Address("16410", "Telfs", "Weißenbachgasse", "1"),
-                });
+                    telfs = new City("06410", "Telfs");
+                }
+                else
+                {
+                    telfs = cTelfs[0];
+                }
+                var aWeißenbachgasse1 = context.Addresses.Where(c => c.Street == "Weißenbachgasse" && c.Housenumber == "1").ToList<Address>();
+                Address weißenbachgasse1;
+                if (aWeißenbachgasse1.Count == 0)
+                {
+                     weißenbachgasse1= new Address(telfs, "Weißenbachgasse", "1");
+                }
+                else
+                {
+                    weißenbachgasse1 = aWeißenbachgasse1[0];
+                }
+                    
+                context.Customers.Add(new Customer("Tobias", "Laser", new DateTime(2003, 01, 30), 'W', 2090.8m, false, Gender.male, weißenbachgasse1));
+                Console.WriteLine(context.Customers.Find(1));
                 await SaveToDB(context);
             }
-            entity = context.Customers.Where(context => context.Firstname == "Erik" && context.Lastname == "Schmölzer").ToList();
-            if (entity.Count == 0)
+
+            entity = context.Customers.Where(context => context.Firstname == "Erik" && context.Lastname == "Schmölzer").ToList<Customer>();
+            Console.WriteLine(entity.Count);
+            foreach(Customer customer in entity)
             {
-                context.Customers.Add(new Customer()
+                Console.WriteLine(customer);
+            }
+            if (entity.Count <= 1)
+            {
+
+                var cSomeCity = context.Cities.Where(c => c.Postalcode.Equals("06410")).ToList<City>();
+                City someCity;
+                if (cSomeCity.Count == 0)
                 {
-                    Firstname = "Erik",
-                    Lastname = "Schmölzer",
-                    Birthdate = new DateTime(2004, 05, 15),
-                    Department = 'W',
-                    Gender = Gender.male,
-                    IsMarried = false,
-                    Salary = 2090.8m,
-                    Address = new Address("01234", "SomeCity", "SomeStreet", "SomeNumber")
-                });
-                context.Customers.Add(new Customer()
+                    someCity = new City("012345", "SomeCity");
+                }
+                else
                 {
-                    Firstname = "Erik",
-                    Lastname = "Schmölzer",
-                    Birthdate = new DateTime(2004, 05, 15),
-                    Department = 'W',
-                    Gender = Gender.male,
-                    IsMarried = false,
-                    Salary = 2090.8m,
-                    Address = new Address("01234", "SomeCity", "SomeStreet", "SomeNumber")
-                });
+                    someCity = cSomeCity[0];
+                }
+                var aSomeAddress = context.Addresses.Where(c => c.Street == "Weißenbachgasse" && c.Housenumber == "1").ToList<Address>();
+                Address someAddress;
+                if (aSomeAddress.Count == 0)
+                {
+                    someAddress = new Address(someCity, "Weißenbachgasse", "1");
+                }
+                else
+                {
+                    someAddress = aSomeAddress[0];
+                }
+                context.Customers.Add(new Customer("Erik", "Schmölzer", new DateTime(2004, 05, 15), 'W', 2090.8m, false, Gender.male, someAddress));
+                if (entity.Count == 0)
+                {
+                    context.Customers.Add(new Customer("Erik", "Schmölzer", new DateTime(2004, 05, 15), 'W', 2090.8m, false, Gender.male, someAddress));
+                }
                 await SaveToDB(context);
             }
-            Console.WriteLine(context.Customers.Find(1));
+
+            
             // einen Customer suchen und löschen
-            Console.WriteLine("hier");
-            return;
-            Customer eric = await context.Customers.FindAsync(2);
+
+            Customer eric = context.Customers.Where(c=> c.Firstname == "Erik" && c.Lastname== "Schmölzer").ToList<Customer>()[0];
             if (eric != null)
             {
                 context.Customers.Remove(eric);
@@ -84,21 +104,24 @@ public class Program
             }
 
             // einen Customer suchen und ändern
-            Customer tobias = await context.Customers.FindAsync(3);
+            Customer tobias = await context.Customers.FindAsync(1);
             if (tobias != null)
             {
-                tobias.Address.City.Postalcode = "06410";
+                tobias.Salary = 10000.99m;
                 Console.Write("Tobias wurde geändert");
                 await SaveToDB(context);
             }
 
             // selber: 
-            //  m:n -berziehung zwischen Artikel und Bill
+            //  m:n -beziehung zwischen Artikel und Bill
             //      price in article - standardpreis
             //      price irgendwo - aktionspreis
             //      Anzahl der bestellten  artikel
+
         }
+
     }
+
     public static async Task SaveToDB(DbContext context)
     {
         try
@@ -112,14 +135,17 @@ public class Program
         catch (DbUpdateConcurrencyException dbucEx)
         {
             Console.WriteLine("Fehler:\tDatenbank - gleichzeitiger zugriff");
+            Console.WriteLine(dbucEx);
         }
         catch (DbUpdateException dbuEx)
         {
             Console.WriteLine("Fehler:\t Datenbank-Update fehlgeschlagen");
+            Console.WriteLine(dbuEx);
         }
         catch (Exception ex)
         {
             Console.WriteLine("Fehler:\t" + ex.Message);
+            Console.WriteLine(ex);
         }
 
     }

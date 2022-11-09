@@ -1,10 +1,20 @@
-﻿namespace ORM_LINQ.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ORM_LINQ.Models
 {
     //  gehört zum Beispiel Article
     public class Evaluation
     {
-        public int EvaluationId { get; set; }
+        [Key]
+        [Column("evaluation_id")]
+        public int MyEvaluationId { get; set; }
+        [Column("evaluation_text")]
+        [Required]
+        [MaxLength(2000)]
         public string Text { get; set; }
+        [Column("stars")]
+        [Required]
         public int Stars { get; set; }
         //NAvigations-Property
         public virtual Article Article { get; set; }
@@ -20,9 +30,12 @@
 
         }
 
+           
+           
+           
         public override string ToString()
         {
-            return this.ToString();
+            return base.ToString();
         }
     }
 }

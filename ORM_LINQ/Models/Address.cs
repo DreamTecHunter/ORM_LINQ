@@ -10,18 +10,20 @@ namespace ORM_LINQ.Models
     {
         // n:m
         public int AddressId { get; set; }
-        public City City { get; set; }
         public string Street { get; set; }
         public string Housenumber { get; set; }
+        public virtual City City { get; set; }
+        public virtual List<Customer> Customers{ get; set; }
 
-        public Address(string postalcode, string name, string street, string housenumber)
+
+        public Address(City city, string street, string housenumber)
         {
-            this.City = new City(postalcode, name);
+            this.City = city;
             this.Street = street;
-            Housenumber = housenumber;
+            this.Housenumber = housenumber;
         }
 
-        public Address() : this("00000", "city", "street", "housenumber")
+        public Address() : this(new City("00000","somewhere"), "street", "housenumber")
         {
 
         }
@@ -29,6 +31,11 @@ namespace ORM_LINQ.Models
         public override string ToString()
         {
             return "AddressId: "+this.AddressId+"\t"+this.City.ToString()+"\t"+this.Street.ToString()+"\t"+this.Housenumber;
+        }
+
+        public static implicit operator List<object>(Address v)
+        {
+            throw new NotImplementedException();
         }
     }
 }

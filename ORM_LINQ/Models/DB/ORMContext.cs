@@ -15,13 +15,14 @@ namespace ORM_LINQ.Models.DB
     {
         //  DBSet<Klassenname> ermöglicht den Zugriff auf die DB-Tabelle Customers
         public virtual DbSet<City> Cities { get; set; }
-        public virtual DbSet<Address> Address { get; set; }
+        public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
+        /*
         public virtual DbSet<Article> Articles { get; set; }
         public virtual DbSet<Evaluation> Evaluations { get; set; }
-        public virtual DbSet<Bill> Bill { get; set; }
+        public virtual DbSet<Bill> Bills { get; set; }
 
-
+        */
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // eigener nutzer auf mysql mit begrenzten rechten (ohne)
@@ -29,6 +30,11 @@ namespace ORM_LINQ.Models.DB
 
             string connectionString = "Server=localhost;database=orm_test_01;user=swp-vogt;password=swp-vogt";
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
         }
     }
 }

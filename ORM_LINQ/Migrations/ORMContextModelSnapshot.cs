@@ -41,48 +41,7 @@ namespace ORM_LINQ.Migrations
 
                     b.HasIndex("CityPostalcode");
 
-                    b.ToTable("Address");
-                });
-
-            modelBuilder.Entity("ORM_LINQ.Models.Article", b =>
-                {
-                    b.Property<int>("ArticleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BillId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("ArticleId");
-
-                    b.HasIndex("BillId");
-
-                    b.ToTable("Articles");
-                });
-
-            modelBuilder.Entity("ORM_LINQ.Models.Bill", b =>
-                {
-                    b.Property<int>("BillId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Prize")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.HasKey("BillId");
-
-                    b.ToTable("Bill");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("ORM_LINQ.Models.City", b =>
@@ -106,9 +65,6 @@ namespace ORM_LINQ.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("AddressId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BillId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Birthdate")
@@ -139,38 +95,13 @@ namespace ORM_LINQ.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.HasIndex("BillId");
-
                     b.ToTable("Customers");
-                });
-
-            modelBuilder.Entity("ORM_LINQ.Models.Evaluation", b =>
-                {
-                    b.Property<int>("EvaluationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("ArticleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Stars")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("EvaluationId");
-
-                    b.HasIndex("ArticleId");
-
-                    b.ToTable("Evaluations");
                 });
 
             modelBuilder.Entity("ORM_LINQ.Models.Address", b =>
                 {
                     b.HasOne("ORM_LINQ.Models.City", "City")
-                        .WithMany()
+                        .WithMany("Addresses")
                         .HasForeignKey("CityPostalcode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -178,49 +109,25 @@ namespace ORM_LINQ.Migrations
                     b.Navigation("City");
                 });
 
-            modelBuilder.Entity("ORM_LINQ.Models.Article", b =>
-                {
-                    b.HasOne("ORM_LINQ.Models.Bill", null)
-                        .WithMany("Article")
-                        .HasForeignKey("BillId");
-                });
-
             modelBuilder.Entity("ORM_LINQ.Models.Customer", b =>
                 {
                     b.HasOne("ORM_LINQ.Models.Address", "Address")
-                        .WithMany()
+                        .WithMany("Customers")
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ORM_LINQ.Models.Bill", null)
-                        .WithMany("Customer")
-                        .HasForeignKey("BillId");
-
                     b.Navigation("Address");
                 });
 
-            modelBuilder.Entity("ORM_LINQ.Models.Evaluation", b =>
+            modelBuilder.Entity("ORM_LINQ.Models.Address", b =>
                 {
-                    b.HasOne("ORM_LINQ.Models.Article", "Article")
-                        .WithMany("Evaluations")
-                        .HasForeignKey("ArticleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Article");
+                    b.Navigation("Customers");
                 });
 
-            modelBuilder.Entity("ORM_LINQ.Models.Article", b =>
+            modelBuilder.Entity("ORM_LINQ.Models.City", b =>
                 {
-                    b.Navigation("Evaluations");
-                });
-
-            modelBuilder.Entity("ORM_LINQ.Models.Bill", b =>
-                {
-                    b.Navigation("Article");
-
-                    b.Navigation("Customer");
+                    b.Navigation("Addresses");
                 });
 #pragma warning restore 612, 618
         }
