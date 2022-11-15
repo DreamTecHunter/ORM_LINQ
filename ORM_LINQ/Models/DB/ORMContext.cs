@@ -44,6 +44,22 @@ namespace ORM_LINQ.Models.DB
                 .HasColumnName("Evaluation_Text")
                 .HasDefaultValue(null)
                 .IsRequired();
+            modelBuilder.Entity<Address>()
+                .Property(t => t.MyAddressId)
+                .HasColumnName("address_id")
+                .HasDefaultValue(null);
+            modelBuilder.Entity<City>()
+                .Property(t => t.Postalcode)
+                .HasColumnName("postal_code")
+                .HasMaxLength(20)
+                .HasDefaultValue(null)
+                .IsRequired();
+            modelBuilder.Entity<City>()
+                .Property(t => t.Name)
+                .HasColumnName("city")
+                .HasMaxLength(200)
+                .HasDefaultValue(null)
+                .IsRequired();
         }
     }
 }

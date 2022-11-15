@@ -9,7 +9,7 @@ namespace ORM_LINQ.Models
     public class Address
     {
         // n:m
-        public int AddressId { get; set; }
+        public int MyAddressId { get; set; }
         public string Street { get; set; }
         public string Housenumber { get; set; }
         public virtual City City { get; set; }
@@ -30,7 +30,7 @@ namespace ORM_LINQ.Models
 
         public override string ToString()
         {
-            return "AddressId: "+this.AddressId+"\t"+this.City.ToString()+"\t"+this.Street.ToString()+"\t"+this.Housenumber;
+            return "AddressId: "+this.MyAddressId+"\t"+this.City.ToString()+"\t"+this.Street.ToString()+"\t"+this.Housenumber;
         }
 
         public static implicit operator List<object>(Address v)
