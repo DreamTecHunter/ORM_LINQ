@@ -28,7 +28,7 @@ namespace ORM_LINQ.Models.DB
             // eigener nutzer auf mysql mit begrenzten rechten (ohne)
             //optionsBuilder.UseMySQL("Server=localhost;database=orm_test_01;user=swp-vogt;password=swp-vogt");
 
-            string connectionString = "Server=localhost;database=orm_test_01;user=swp-vogt;password=swp-vogt";
+            string connectionString = "Server=localhost;database=orm_test_5a;user=root;password=SHW_Destroyer02";
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
 
