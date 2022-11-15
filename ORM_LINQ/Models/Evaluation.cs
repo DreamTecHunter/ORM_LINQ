@@ -6,13 +6,12 @@ namespace ORM_LINQ.Models
     //  gehört zum Beispiel Article
     public class Evaluation
     {
-        private int id;
         private int stars;
         private Article article;
 
         [Key]
         [Column("evaluation_id")]
-        public int MyEvaluationId { get => id; set { if (value > -1) id = value; } }
+        public int MyEvaluationId { get; set; }
         [Column("evaluation_text")]
         [Required]
         [MaxLength(2000)]
