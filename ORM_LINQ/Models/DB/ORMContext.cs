@@ -34,7 +34,16 @@ namespace ORM_LINQ.Models.DB
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.Entity<Evaluation>()
+                .Property(eid => eid.MyEvaluationId)
+                .HasColumnName("Id")
+                .HasDefaultValue(0)
+                .IsRequired();
+            modelBuilder.Entity<Evaluation>()
+                .Property(t => t.Text)
+                .HasColumnName("Evaluation_Text")
+                .HasDefaultValue(null)
+                .IsRequired();
         }
     }
 }
